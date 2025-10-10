@@ -9,22 +9,22 @@ namespace Arkanoid.Forms
 {
     public partial class MainForm : Form
     {
-        private const int PLATFORM_WIDTH = 100;
-        private const int PLATFORM_HEIGHT = 15;
-        private const int PLATFORM_Y_OFFSET = 50;
+        private const int PlatformWidth = 100;
+        private const int PlatformHeight = 15;
+        private const int PlatformYOffset = 50;
 
-        private const float BALL_RADIUS = 10f;
-        private const float INITIAL_BALL_SPEED_X = 5f;
-        private const float INITIAL_BALL_SPEED_Y = -5f;
+        private const float BallRadius = 10f;
+        private const float InitialBallSpeedX = 5f;
+        private const float InitialBallSpeedY = -5f;
 
-        private const int BRICK_WIDTH = 60;
-        private const int BRICK_HEIGHT = 20;
-        private const int BRICK_SPACING = 5;
-        private const int BRICK_START_Y = 30;
-        private const int BRICK_START_X = 10;
-        private const int BRICK_ROWS = 5;
+        private const int BrickWidth = 60;
+        private const int BrickHeight = 20;
+        private const int BrickSpacing = 5;
+        private const int BrickStartY = 30;
+        private const int BrickStartX = 10;
+        private const int BrickRows = 5;
 
-        private const int TIMER_INTERVAL_MS = 16;
+        private const int TimerIntervalMs = 16;
 
         private Platform platform;
         private Ball ball;
@@ -32,6 +32,9 @@ namespace Arkanoid.Forms
         private System.Windows.Forms.Timer gameTimer;
         private bool ballLaunched = false;
 
+        /// <summary>
+        /// Основной конструктор
+        /// </summary>
         public MainForm()
         {
             InitializeComponent();
@@ -48,36 +51,36 @@ namespace Arkanoid.Forms
             gameTimer?.Dispose();
 
             // Платформа
-            int platformX = Width / 2 - PLATFORM_WIDTH / 2;
-            int platformY = Height - PLATFORM_Y_OFFSET;
-            platform = new Platform(platformX, platformY, PLATFORM_WIDTH, PLATFORM_HEIGHT);
+            int platformX = Width / 2 - PlatformWidth / 2;
+            int platformY = Height - PlatformYOffset;
+            platform = new Platform(platformX, platformY, PlatformWidth, PlatformHeight);
 
             // Шар
-            float ballStartX = platform.Bounds.X + PLATFORM_WIDTH / 2f;
-            float ballStartY = platform.Bounds.Y - BALL_RADIUS;
+            float ballStartX = platform.Bounds.X + PlatformWidth / 2f;
+            float ballStartY = platform.Bounds.Y - BallRadius;
             ball = new Ball(ballStartX, ballStartY)
             {
-                Radius = BALL_RADIUS,
-                Dx = INITIAL_BALL_SPEED_X,
-                Dy = INITIAL_BALL_SPEED_Y
+                Radius = BallRadius,
+                Dx = InitialBallSpeedX,
+                Dy = InitialBallSpeedY
             };
 
             // Кирпичи
             bricks.Clear();
-            int cols = (Width - 2 * BRICK_START_X + BRICK_SPACING) / (BRICK_WIDTH + BRICK_SPACING);
+            int cols = (Width - 2 * BrickStartX + BrickSpacing) / (BrickWidth + BrickSpacing);
 
-            for (int row = 0; row < BRICK_ROWS; row++)
+            for (int row = 0; row < BrickRows; row++)
             {
                 for (int col = 0; col < cols; col++)
                 {
-                    int x = col * (BRICK_WIDTH + BRICK_SPACING) + BRICK_START_X;
-                    int y = row * (BRICK_HEIGHT + BRICK_SPACING) + BRICK_START_Y;
-                    bricks.Add(new Brick(x, y, BRICK_WIDTH, BRICK_HEIGHT, GetBrickColor(row)));
+                    int x = col * (BrickWidth + BrickSpacing) + BrickStartX;
+                    int y = row * (BrickHeight + BrickSpacing) + BrickStartY;
+                    bricks.Add(new Brick(x, y, BrickWidth, BrickHeight, GetBrickColor(row)));
                 }
             }
 
             // Таймер
-            gameTimer = new System.Windows.Forms.Timer { Interval = TIMER_INTERVAL_MS };
+            gameTimer = new System.Windows.Forms.Timer { Interval = TimerIntervalMs };
             gameTimer.Tick += GameLoop;
             gameTimer.Start();
         }
@@ -151,7 +154,7 @@ namespace Arkanoid.Forms
             else
             {
                 ball.Position = new PointF(
-                    platform.Bounds.X + PLATFORM_WIDTH / 2f,
+                    platform.Bounds.X + PlatformWidth / 2f,
                     platform.Bounds.Y - ball.Radius
                 );
             }
@@ -165,13 +168,41 @@ namespace Arkanoid.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            platform.Draw(e.Graphics);
-            ball.Draw(e.Graphics);
-            foreach (var brick in bricks)
+
+            var brushCache = new Dictionary<Color, SolidBrush>();
+
+            try
             {
-                brick.Draw(e.Graphics);
+                platform.Draw(e.Graphics);
+                ball.Draw(e.Graphics);
+
+                foreach (var brick in bricks)
+                {
+                    if (brick.IsDestroyed)
+                    {
+                        continue;
+                    }
+
+                    if (!brushCache.TryGetValue(brick.Color, out SolidBrush brush))
+                    {
+                        brush = new SolidBrush(brick.Color);
+                        brushCache[brick.Color] = brush;
+                    }
+
+                    e.Graphics.FillRectangle(brush, brick.Bounds);
+                    e.Graphics.DrawRectangle(Pens.Black, brick.Bounds);
+                }
+            }
+            finally
+            {
+                // Освобождаем кисти
+                foreach (var brush in brushCache.Values)
+                {
+                    brush.Dispose();
+                }
             }
         }
+
 
         /// <summary>
         /// Управление
