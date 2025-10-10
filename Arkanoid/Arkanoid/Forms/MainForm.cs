@@ -44,6 +44,9 @@ namespace Arkanoid.Forms
         /// </summary>
         private void InitializeGame()
         {
+            gameTimer?.Stop();
+            gameTimer?.Dispose();
+
             // Платформа
             int platformX = Width / 2 - PLATFORM_WIDTH / 2;
             int platformY = Height - PLATFORM_Y_OFFSET;
