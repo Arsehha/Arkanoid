@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Arkanoid.Classes
 {
     /// <summary>
@@ -19,6 +14,9 @@ namespace Arkanoid.Classes
             Bounds = new Rectangle(x, y, width, height);
         }
 
+        /// <summary>
+        /// Движение платформы влево
+        /// </summary>
         public void MoveLeft()
         {
             Bounds = new Rectangle(
@@ -29,6 +27,9 @@ namespace Arkanoid.Classes
             );
         }
 
+        /// <summary>
+        /// Движение платформы влево
+        /// </summary>
         public void MoveRight(int containerWidth)
         {
             Bounds = new Rectangle(
@@ -39,6 +40,9 @@ namespace Arkanoid.Classes
             );
         }
 
+        /// <summary>
+        /// Отрисовка платформы
+        /// </summary>
         public void Draw(Graphics g)
         {
             g.FillRectangle(Brushes.Blue, Bounds);

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Arkanoid.Classes
 {
     /// <summary>
@@ -22,7 +17,9 @@ namespace Arkanoid.Classes
             Color = color;
         }
 
-        // Наносим урон (1 единица)
+        /// <summary>
+        /// Полечение урона
+        /// </summary>
         public void TakeDamage(int damage = 1)
         {
             Health -= damage;
@@ -32,6 +29,9 @@ namespace Arkanoid.Classes
             }
         }
 
+        /// <summary>
+        /// Отрисовка кирпича
+        /// </summary>
         public void Draw(Graphics g)
         {
             if (!IsDestroyed)

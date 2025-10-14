@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using Arkanoid.Classes;
+﻿using Arkanoid.Classes;
 
 namespace Arkanoid.Forms
 {
@@ -31,6 +26,7 @@ namespace Arkanoid.Forms
         private List<Brick> bricks = new List<Brick>();
         private System.Windows.Forms.Timer gameTimer;
         private bool ballLaunched = false;
+        private Dictionary<Color, SolidBrush> brushCache;
 
         /// <summary>
         /// Основной конструктор
@@ -49,6 +45,8 @@ namespace Arkanoid.Forms
         {
             gameTimer?.Stop();
             gameTimer?.Dispose();
+
+            brushCache = new Dictionary<Color, SolidBrush>();
 
             // Платформа
             int platformX = Width / 2 - PlatformWidth / 2;
@@ -86,7 +84,7 @@ namespace Arkanoid.Forms
         }
 
         /// <summary>
-        /// цвет кирпича
+        /// Возвращает цвет кирпича
         /// </summary>
         private Color GetBrickColor(int row)
         {
@@ -168,8 +166,6 @@ namespace Arkanoid.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-
-            var brushCache = new Dictionary<Color, SolidBrush>();
 
             try
             {
