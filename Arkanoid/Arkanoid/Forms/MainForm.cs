@@ -26,7 +26,6 @@ namespace Arkanoid.Forms
         private List<Brick> bricks = new List<Brick>();
         private System.Windows.Forms.Timer gameTimer;
         private bool ballLaunched = false;
-        private Dictionary<Color, SolidBrush> brushCache;
 
         /// <summary>
         /// Основной конструктор
@@ -45,8 +44,6 @@ namespace Arkanoid.Forms
         {
             gameTimer?.Stop();
             gameTimer?.Dispose();
-
-            brushCache = new Dictionary<Color, SolidBrush>();
 
             // Платформа
             int platformX = Width / 2 - PlatformWidth / 2;
@@ -166,6 +163,8 @@ namespace Arkanoid.Forms
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            Dictionary<Color, SolidBrush> brushCache = new Dictionary<Color, SolidBrush>();
 
             try
             {
