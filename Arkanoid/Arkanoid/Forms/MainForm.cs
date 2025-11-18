@@ -2,6 +2,9 @@
 
 namespace Arkanoid.Forms
 {
+    /// <summary>
+    /// Главная форма
+    /// </summary>
     public partial class MainForm : Form
     {
         private const int PlatformWidth = 100;
@@ -27,6 +30,8 @@ namespace Arkanoid.Forms
         private System.Windows.Forms.Timer gameTimer;
         private bool ballLaunched = false;
 
+        Dictionary<Color, SolidBrush>? brushCache = null;
+
         /// <summary>
         /// Основной конструктор
         /// </summary>
@@ -44,6 +49,8 @@ namespace Arkanoid.Forms
         {
             gameTimer?.Stop();
             gameTimer?.Dispose();
+
+            brushCache = new Dictionary<Color, SolidBrush>();
 
             // Платформа
             int platformX = Width / 2 - PlatformWidth / 2;
@@ -164,37 +171,24 @@ namespace Arkanoid.Forms
         {
             base.OnPaint(e);
 
-            Dictionary<Color, SolidBrush> brushCache = new Dictionary<Color, SolidBrush>();
+            platform.Draw(e.Graphics);
+            ball.Draw(e.Graphics);
 
-            try
+            foreach (var brick in bricks)
             {
-                platform.Draw(e.Graphics);
-                ball.Draw(e.Graphics);
-
-                foreach (var brick in bricks)
+                if (brick.IsDestroyed)
                 {
-                    if (brick.IsDestroyed)
-                    {
-                        continue;
-                    }
-
-                    if (!brushCache.TryGetValue(brick.Color, out SolidBrush brush))
-                    {
-                        brush = new SolidBrush(brick.Color);
-                        brushCache[brick.Color] = brush;
-                    }
-
-                    e.Graphics.FillRectangle(brush, brick.Bounds);
-                    e.Graphics.DrawRectangle(Pens.Black, brick.Bounds);
+                    continue;
                 }
-            }
-            finally
-            {
-                // Освобождаем кисти
-                foreach (var brush in brushCache.Values)
+
+                if (!brushCache.TryGetValue(brick.Color, out SolidBrush brush))
                 {
-                    brush.Dispose();
+                    brush = new SolidBrush(brick.Color);
+                    brushCache[brick.Color] = brush;
                 }
+
+                e.Graphics.FillRectangle(brush, brick.Bounds);
+                e.Graphics.DrawRectangle(Pens.Black, brick.Bounds);
             }
         }
 
