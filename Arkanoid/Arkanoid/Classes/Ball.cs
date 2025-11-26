@@ -2,53 +2,35 @@
 namespace Arkanoid.Classes
 {
     /// <summary>
-    /// Класс для кирпичей
+    /// Класс для шара
     /// </summary>
     public class Ball
     {
-        private PointF position;
-
-        public PointF Position
-        {
-            get => position;
-            set => position = value;
-        }
-
-        public float Radius { get; set; } = 10f;
-        public float Dx { get; set; } = 5f;
-        public float Dy { get; set; } = -5f;
+        public PointF Position { get; set; }
+        public float Radius { get; set; }
+        public float Dx { get; set; }
+        public float Dy { get; set; }
 
         /// <summary>
-        /// Конструктор мяча
+        /// Конструктор шара
         /// </summary>
-        public Ball(float x, float y)
+        public Ball(float x, float y, float radius = 10f, float dx = 5f, float dy = -5f)
         {
             Position = new PointF(x, y);
+            Radius = radius;
+            Dx = dx;
+            Dy = dy;
         }
 
+        public RectangleF Bounds =>
+            new RectangleF(Position.X - Radius, Position.Y - Radius, Radius * 2, Radius * 2);
+
         /// <summary>
-        /// Движение мяча
+        /// Перемещние шара
         /// </summary>
-        public void Move()
+        public void Step()
         {
-            // Создаём новый PointF с обновлёнными координатами
             Position = new PointF(Position.X + Dx, Position.Y + Dy);
-        }
-
-        /// <summary>
-        /// Расчёт отскока
-        /// </summary>
-        public RectangleF GetBounds()
-        {
-            return new RectangleF(Position.X - Radius, Position.Y - Radius, Radius * 2, Radius * 2);
-        }
-
-        /// <summary>
-        /// Отрисовка мяча
-        /// </summary>
-        public void Draw(Graphics g)
-        {
-            g.FillEllipse(Brushes.Red, GetBounds());
         }
 
         public void ReverseX() => Dx = -Dx;
