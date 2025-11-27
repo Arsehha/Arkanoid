@@ -7,35 +7,60 @@ namespace Arkanoid
     /// </summary>
     public class GameController
     {
-        // Конфигурируемые параметры
+        // Параметры конфигурации
+        /// <summary>Ширина платформы.</summary>
         public int PlatformWidth { get; } = 100;
+
+        /// <summary>Высота платформы.</summary>
         public int PlatformHeight { get; } = 15;
+
+        /// <summary>Отступ платформы от нижнего края окна.</summary>
         public int PlatformYOffset { get; } = 50;
 
+        /// <summary>Радиус мяча.</summary>
         public float BallRadius { get; } = 10f;
+
+        /// <summary>Начальная скорость мяча по X.</summary>
         public float InitialBallSpeedX { get; } = 5f;
+
+        /// <summary>Начальная скорость мяча по Y.</summary>
         public float InitialBallSpeedY { get; } = -5f;
 
+        /// <summary>Ширина кирпича.</summary>
         public int BrickWidth { get; } = 60;
+
+        /// <summary>Высота кирпича.</summary>
         public int BrickHeight { get; } = 20;
+
+        /// <summary>Интервал между кирпичами.</summary>
         public int BrickSpacing { get; } = 5;
+
+        /// <summary>Начальное смещение кирпичей по Y.</summary>
         public int BrickStartY { get; } = 30;
+
+        /// <summary>Начальное смещение кирпичей по X.</summary>
         public int BrickStartX { get; } = 10;
+
+        /// <summary>Количество рядов кирпичей.</summary>
         public int BrickRows { get; } = 5;
 
-        // Модели
+        /// <summary>Платформа игрока.</summary>
         public Platform Platform { get; private set; }
-        public Ball Ball { get; private set; }
-        public List<Brick> Bricks { get; private set; } = new List<Brick>();
 
-        // Состояние
+        /// <summary>Игровой мяч.</summary>
+        public Ball Ball { get; private set; }
+
+        /// <summary>Коллекция кирпичей уровня.</summary>
+        public List<Brick> Bricks { get; private set; } = new();
+
+        /// <summary>Флаг запуска мяча.</summary>
         public bool BallLaunched { get; private set; } = false;
 
-        // События для View
+        /// <summary>Событие окончания игры (проигрыш).</summary>
         public event Action? GameOver;
-        public event Action? Victory;
 
-        public GameController() { }
+        /// <summary>Событие победы (все кирпичи уничтожены).</summary>
+        public event Action? Victory;
 
         /// <summary>
         /// Инициализация/рестарт уровня

@@ -6,9 +6,24 @@ namespace Arkanoid.Classes
     /// </summary>
     public class Brick
     {
+        /// <summary>
+        /// Прямоугольные границы кирпича.
+        /// </summary>
         public Rectangle Bounds { get; private set; }
+
+        /// <summary>
+        /// Флаг разрушения кирпича.
+        /// </summary>
         public bool IsDestroyed { get; private set; } = false;
+
+        /// <summary>
+        /// Цвет кирпича.
+        /// </summary>
         public Color Color { get; private set; }
+
+        /// <summary>
+        /// Текущая прочность кирпича.
+        /// </summary>
         public int Health { get; private set; }
 
         /// <summary>

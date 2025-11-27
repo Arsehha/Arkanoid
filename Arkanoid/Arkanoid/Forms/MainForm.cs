@@ -12,7 +12,7 @@ namespace Arkanoid.Forms
         private Dictionary<Color, SolidBrush> brushCache = new();
 
         /// <summary>
-        /// Конструктор формы
+        /// Создаёт главное окно игры, инициализирует контроллер и запускает игровой цикл.
         /// </summary>
         public MainForm()
         {
@@ -28,9 +28,6 @@ namespace Arkanoid.Forms
             timer.Start();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void GameTick(object sender, EventArgs e)
         {
             try
@@ -87,7 +84,9 @@ namespace Arkanoid.Forms
             }
         }
 
-
+        /// <summary>
+        /// Обрабатывает нажатие клавиш управления: движение платформы и запуск мяча.
+        /// </summary>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Left)

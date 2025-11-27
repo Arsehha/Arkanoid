@@ -6,7 +6,14 @@ namespace Arkanoid.Classes
     /// </summary>
     public class Platform
     {
+        /// <summary>
+        /// Текущие границы платформы.
+        /// </summary>
         public Rectangle Bounds { get; private set; }
+
+        /// <summary>
+        /// Скорость горизонтального перемещения.
+        /// </summary>
         public int Speed { get; set; } = 8;
 
         /// <summary>
