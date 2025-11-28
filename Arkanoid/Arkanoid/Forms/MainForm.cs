@@ -22,6 +22,9 @@ namespace Arkanoid.Forms
             controller = new GameController();
             controller.Initialize(ClientSize);
 
+            controller.Victory += OnVictory;
+            controller.GameOver += OnGameOver;
+
             timer = new Timer();
             timer.Interval = 16;
             timer.Tick += GameTick;
@@ -30,28 +33,24 @@ namespace Arkanoid.Forms
 
         private void GameTick(object sender, EventArgs e)
         {
-            try
-            {
-                controller.Update(ClientSize);
-            }
-            catch (Exception ex)
-            {
-                timer.Stop();
-
-                if (ex.Message == "WIN")
-                {
-                    MessageBox.Show("Победа!");
-                }
-                else
-                {
-                    MessageBox.Show("Поражение!");
-                }
-
-                Application.Restart();
-            }
-
+            controller.Update(ClientSize);
             Invalidate();
         }
+
+        private void OnVictory()
+        {
+            timer.Stop();
+            MessageBox.Show("Победа!");
+            Application.Restart();
+        }
+
+        private void OnGameOver()
+        {
+            timer.Stop();
+            MessageBox.Show("Поражение!");
+            Application.Restart();
+        }
+
 
         /// <summary>
         /// Метод отрисовки
